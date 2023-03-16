@@ -10,24 +10,24 @@ def get_api_key():
 
 openai.api_key=get_api_key()
 
-def ChatGPT_conversation(conversation):
+def ChatGPT_conversation(conversation, model):
     completion = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
+        model=model,
         messages=conversation
     )
     conversation.append({'role':completion.choices[0].message.role,'content':completion.choices[0].message.content})
     return conversation
 
-conversation=[]
-while True:
-    content=input("你：")
-    if content=="quit":
-        break
-    conversation.append({'role':'system','content':content})
-    conversation = ChatGPT_conversation(conversation)
-    print('{0}: {1}\n'.format(conversation[-1]['role'].strip(), conversation[-1]['content'].strip()))
-
+model = "gpt-3.5-turbo"
+conversation = [{'role':'system','content':''}]
 with open("chat.txt",'w') as file_object:
-    for i in conversation:
-        file_object.write(i['role']+":"+i['content'].strip()+"\n")
-
+    while True:
+        content=input("你：")
+        if content=="quit":
+            break
+        file_object.write("你："+ content.strip() + "\n")
+        conversation[-1]['content'] = content
+        conversation = ChatGPT_conversation(conversation, model)
+        message = conversation[-1]
+        file_object.write(message['role'] + ":" + message['content'].strip() + "\n")
+        print('{0}: {1}\n'.format(message['role'].strip(), message['content'].strip()))

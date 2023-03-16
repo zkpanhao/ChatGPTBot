@@ -1,2 +1,1 @@
-system:测试
-assistant:您好，我是 OpenAI 的 GPT-3 语言模型。请问您需要什么样的测试？
+你：测试
